@@ -1,0 +1,6 @@
+const enc=new TextEncoder();const dec=new TextDecoder();
+export type SealedEntry={version:1;id:string;salt:string;iv:string;ciphertext:string};
+function b64(a:Uint8Array){return btoa(String.fromCharCode(...a))}function bytes(s:string){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
+async function key(pass:string,salt:Uint8Array){const material=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt as BufferSource,iterations:210000,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+export async function seal(text:string,pass:string):Promise<SealedEntry>{if(pass.length<12)throw Error('Use a passphrase of at least 12 characters.');const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},await key(pass,salt),enc.encode(text));return {version:1,id:crypto.randomUUID(),salt:b64(salt),iv:b64(iv),ciphertext:b64(new Uint8Array(cipher))}}
+export async function unseal(entry:SealedEntry,pass:string){const iv=bytes(entry.iv);return dec.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:iv as BufferSource},await key(pass,bytes(entry.salt)),bytes(entry.ciphertext) as BufferSource))}

@@ -1,0 +1,1 @@
+ALTER TABLE `enquiries` ADD `consent_version` text DEFAULT 'enquiry-v1-2026-10-09' NOT NULL;
