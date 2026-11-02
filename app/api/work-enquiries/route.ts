@@ -1,0 +1,5 @@
+import {guard,json} from '../security';
+import {getDb} from '../../../db';
+import {enquiries} from '../../../db/schema';
+import {workEnquirySchema} from '../../work-schema';
+export async function POST(request:Request){const rejected=guard(request);if(rejected)return rejected;try{const raw=await request.text();if(raw.length>6000)return json({error:'Please shorten your enquiry.'},413);const parsed=workEnquirySchema.safeParse(JSON.parse(raw));if(!parsed.success)return json({error:'Check all fields, choose at least one support area and confirm consent and age.'},400);const d=parsed.data,id=crypto.randomUUID();await getDb().insert(enquiries).values({id,name:d.name,email:d.email,interest:'Swthastu at Work / employer scoping',message:`Organisation: ${d.company}\nRole: ${d.role}\nSize: ${d.headcount}\nLocations: ${d.locations}\nWork model: ${d.mode}\nInterests: ${[...new Set(d.needs)].join('; ')}`,consentVersion:'work-enquiry-v1-adult-2026-10-19',createdAt:new Date().toISOString()});return json({id,status:'requested'},201)}catch{return json({error:'Could not save your enquiry. Please try again or email swathastu@gmail.com.'},503)}}

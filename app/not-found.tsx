@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function NotFound(){return <main className="section empty-choices"><span className="eyebrow">SWTHASTU / A NEW STARTING POINT</span><h1>Let’s find your path.</h1><p>This page is not in the collection. Explore our workshops and rituals to find what feels right for you.</p><Link className="button" href="/living-well">Explore the collection →</Link><Link href="/">Return home</Link></main>}

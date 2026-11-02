@@ -1,0 +1,23 @@
+import { spawnSync } from 'node:child_process';
+import { cpSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+const run = (file, args) => {
+  const result = spawnSync(process.execPath, [file, ...args], { stdio: 'inherit', env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1', WRANGLER_SEND_METRICS: 'false' } });
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exit(result.status ?? 1);
+};
+run('node_modules/next/dist/bin/next', ['build', '--webpack']);
+run('node_modules/@opennextjs/cloudflare/dist/cli/index.js', ['build', '--skipNextBuild']);
+rmSync('dist', { recursive: true, force: true });
+mkdirSync('dist/server', { recursive: true });
+run('node_modules/wrangler/bin/wrangler.js', ['deploy', '--config', 'wrangler.json', '--dry-run', '--outdir', 'dist/server']);
+renameSync('dist/server/worker.js', 'dist/server/index.js');
+cpSync('.open-next/assets', 'dist/client', { recursive: true });
+mkdirSync('dist/.openai', { recursive: true });
+cpSync('.openai/hosting.json', 'dist/.openai/hosting.json');
+cpSync('drizzle', 'dist/.openai/drizzle', { recursive: true });
+const worker = JSON.parse(readFileSync('wrangler.json', 'utf8'));
+worker.main = 'index.js';
+worker.assets.directory = '../client';
+worker.d1_databases[0].migrations_dir = '../.openai/drizzle';
+writeFileSync('dist/server/wrangler.json', JSON.stringify(worker, null, 2) + '\n');
+console.log('Next.js production build and Sites Worker package ready.');
