@@ -25,8 +25,8 @@ for(const path of ['/missing-page','/rituals/missing','/workshops/missing']){
 }
 for(const path of ['/rituals?need=Calm','/sanctuary?practice=one-honest-sankalpa']){
   const html=await (await fetch(base+path,{headers:{'user-agent':'Googlebot'}})).text();
-  assert(html.includes('rel="canonical" href="https://swthastu-wellbeing.amberllama2.chatgpt.site'+path.split('?')[0]+'"'));
+  assert(html.includes('rel="canonical" href="https://swthastu.com'+path.split('?')[0]+'"'));
 }
 const robots=await fetch(base+'/robots.txt');assert.equal(robots.status,200);
-assert.match(await robots.text(),/Disallow: \/api\/[\s\S]*Sitemap: https:\/\/swthastu-wellbeing.amberllama2.chatgpt.site\/sitemap.xml/);
+assert.match(await robots.text(),/Disallow: \/api\/[\s\S]*Sitemap: https:\/\/swthastu.com\/sitemap.xml/);
 console.log(`PASS: ${paths.length} rendered routes; ${indexed.length} sitemap URLs; unique metadata, social images, JSON-LD, indexing policies, canonical queries and 404s.`);

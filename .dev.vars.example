@@ -1,0 +1,13 @@
+# Local Worker runtime only. Never commit .dev.vars or real keys.
+NEXTJS_ENV="development"
+GEMINI_API_KEY=""
+GEMINI_MODEL="gemini-3.8-flash"
+GEMINI_LIVE_MODEL="gemini-3.8-live"
+# Optional legacy text-chat provider
+OPENAI_API_KEY=""
+OPENAI_MODEL="gpt-4.1-mini"
+# Corporate enquiries: verified Resend sender and Turnstile widget.
+RESEND_API_KEY=""
+CORPORATE_FROM_EMAIL=""
+TURNSTILE_SITE_KEY=""
+TURNSTILE_SECRET_KEY=""

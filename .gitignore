@@ -30,6 +30,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+.dev.vars*
+!.dev.vars.example
+*.tsbuildinfo
 
 # vercel
 .vercel
@@ -42,10 +46,11 @@ next-env.d.ts
 /.sites-runtime/
 /.agents/
 /.codex/
+/.openai/
 /outputs/
 /work/
+/.claude/
 
-.dev.vars*
-
-# Incremental TypeScript build cache
-*.tsbuildinfo
+# Local browser verification artifacts
+/.playwright-cli/
+/output/playwright/

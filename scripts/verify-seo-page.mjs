@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 
-const origin='https://swthastu-wellbeing.amberllama2.chatgpt.site';
+const origin='https://swthastu.com';
 function meta(html,key){
   const tag=html.match(new RegExp(`<meta (?:name|property)="${key}" content="([^"]*)"`));
   assert(tag,`Missing ${key}`);return tag[1];

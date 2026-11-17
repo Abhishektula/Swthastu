@@ -1,0 +1,20 @@
+@layer components {
+  .corporate-layout { @apply grid items-start gap-12 lg:grid-cols-[.7fr_1.3fr]; }
+  .corporate-aside { @apply max-w-md; }
+  .corporate-aside ol { @apply space-y-4 border-y border-line py-6 pl-5 mb-6; }
+  .corporate-form { @apply min-w-0 rounded-xl border border-line bg-cream p-5 sm:p-9; }
+  .corporate-form h2 { @apply text-[clamp(28px,3vw,40px)]; }
+  .corporate-form fieldset { @apply min-w-0 border-0 p-0 m-0 mb-8; }
+  .corporate-form legend { @apply mb-5 text-sm font-semibold tracking-wide text-brand; }
+  .corporate-fields { @apply grid grid-cols-1 gap-4 sm:grid-cols-2; }
+  .corporate-fields label { @apply min-w-0; }
+  .corporate-form input:not([type=checkbox]),.corporate-form select,.corporate-form textarea { @apply mt-2 rounded-lg; }
+  .corporate-form .corporate-interests { @apply mt-6 mb-0; }
+  .corporate-check { @apply flex items-start gap-3 text-sm my-4; }
+  .corporate-check input { @apply mt-1 w-4 h-4 shrink-0 accent-brand; }
+  .corporate-interests .corporate-check { @apply m-0; }
+  .corporate-verification { @apply my-6 min-h-16; }
+  .corporate-form button:disabled { @apply cursor-not-allowed opacity-60; }
+  .corporate-error { @apply my-4 text-brand font-semibold; }
+  .corporate-delivery { @apply mt-4 mb-0; }
+}

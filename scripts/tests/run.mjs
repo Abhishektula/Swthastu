@@ -1,0 +1,9 @@
+import "./access-token.test.mjs";
+import "./worker-request.test.mjs";
+import "./worker.test.mjs";
+import "./migrations.test.mjs";
+import "./corporate.test.mjs";
+import "./corporate-route.test.mjs";
+import "./rishi.test.mjs";
+import "./work-enquiry.test.mjs";
+import "./seo.test.mjs";

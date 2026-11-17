@@ -1,51 +1,90 @@
 # Swthastu
 
-Source repository for the Swthastu wellbeing website.
+Wellbeing website built with Next.js App Router, React, TypeScript and Tailwind CSS. Cloudflare Workers serves pages and APIs through OpenNext; D1 stores enquiries and provider applications. This repository incorporates the integrations from the sibling `swthastu server/swthastu` checkout.
 
-## Next.js + Tailwind CSS
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing or committing code. See [production operations](docs/production.md) for release gates and recovery.
 
-Official Next.js App Router with React, TypeScript and Tailwind CSS v4. OpenNext packages the Next.js application for the existing Cloudflare Workers host. The website retains its pages, imagery, EAP enquiries, provider applications, private browser journal and Rishi endpoint.
+## Local development
 
-## Development
+Use Node.js >=22.13.0 and the pnpm version pinned in `package.json`.
 
-Use Node.js 22.13 or newer and the pinned pnpm version in package.json.
+```sh
+pnpm install --frozen-lockfile
+pnpm db:migrate:local
+pnpm dev
+```
 
-- `pnpm install --frozen-lockfile`
-- `pnpm dev` — Next.js development server, with local Cloudflare bindings.
-- `pnpm typecheck`
-- `pnpm build:next` — standard Next.js production build.
-- `pnpm start` — standard Next.js production server. Database endpoints require Cloudflare bindings; use the Worker preview for complete local integration testing.
-- `pnpm build` — Next.js production build, OpenNext conversion and Sites deployment package in dist.
-- `pnpm preview:worker` — local preview of the production Worker.
-
-For local D1, apply migrations with `pnpm exec wrangler d1 migrations apply DB --local`. The UUID in wrangler.json is a local placeholder; the existing Sites deployment provisions the real DB binding from .openai/hosting.json. Do not deploy that placeholder to a separate Cloudflare account; configure that account's own database first.
-
-Optional Rishi configuration: OPENAI_API_KEY and OPENAI_MODEL are server-only environment variables. Without a key, the existing guided-preview mode remains available. Never use NEXT_PUBLIC_ for credentials. Do not commit .env or .dev.vars files.
-
-Tailwind theme and utilities are imported through app/globals.css and compiled using @tailwindcss/postcss. Existing editorial styles are preserved in the components layer; Tailwind utilities can override them. Preflight is omitted to preserve the established typography and form defaults.
-
-Publishing uses the existing project identity and database migrations. The build copies hosting metadata and migrations into dist/.openai, preserving the previous Sites build integration without a Vite plugin. No Vite or Vinext runtime is used.
-
-## Published experience collection
-
-- 5 workshops: affirmations, forgiveness and boundaries, living with grief, self-love, and working with negative thoughts.
-- 64 ritual detail pages with practice steps, suitability, care guidance and reflection prompts.
-- 13 retreat journeys and 6 gatherings, each connected to its relevant practices.
-- Search and filters by need, time, support and programme; private journal prompt handoff; saved retreats; consent-based enquiries.
-- A distinct editorial image for every experience detail page, plus canonical metadata and a sitemap.
-
-The public site is https://swthastu-wellbeing.amberllama2.chatgpt.site. This source import corresponds to published version 6, source commit `5264f26f95bfc9f9063cb1d2049d8fd197243662`. Build caches and local credentials are excluded.
+Open http://127.0.0.1:3000. Local D1 state is stored in ignored `.wrangler/state`. Copy `.dev.vars.example` to `.dev.vars` for optional local Worker secrets. Never commit real keys or private visitor data.
 
 ## Verification
 
-After installing dependencies:
-
 ```sh
-pnpm typecheck
-node scripts/verify-catalogue.mjs
-node scripts/verify-wellbeing.mjs
-pnpm build
-node scripts/verify-production.mjs
+pnpm check
+pnpm build:cloudflare
+pnpm test:production
 ```
 
-The production verification uses an ephemeral local database. It checks all 88 detail routes, their metadata and image references, the sitemap, missing-page responses, the journal prompt handoff, and consent-gated experience and EAP enquiries. It does not submit test enquiries to the live website.
+`check` runs ESLint, TypeScript, journal encryption/privacy checks, catalogue checks, and security/integration tests. `test:production` bundles the Worker with Wrangler's dry run, then exercises rendered routes and API persistence using an ephemeral local database. It does not deploy or contact the live site.
+
+`pnpm build` builds native Next.js output. `pnpm start` serves it on port 3000; database APIs need Cloudflare bindings, so use `pnpm preview` for complete runtime testing. `preview` builds the Cloudflare bundle and starts a local Worker. Rendered SEO checks can run against it with `pnpm test:seo http://127.0.0.1:8787`.
+
+The `Verify` GitHub Actions workflow performs the checks and Cloudflare build on Linux. It does not need production credentials or deploy the application. Use Linux CI or WSL if OpenNext encounters Windows-specific build limitations.
+
+## Deployment
+
+`wrangler.jsonc` is the authoritative Cloudflare configuration. It retains the server checkout's Worker, account, D1 database and domain targets. Confirm these targets before any remote operation. The old Sites build/package scripts and placeholder `wrangler.json` have been removed; `.openai/hosting.json` is retained as historical hosting identity and is not used by the Cloudflare commands.
+
+1. Configure Cloudflare Access as below and run `pnpm deploy:check`.
+2. Authenticate Wrangler locally or supply `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` through the CI secret store.
+3. Back up existing data and review the remote database target. Apply migrations explicitly with `pnpm db:migrate:remote`.
+4. Run the verification commands above, then `pnpm deploy`.
+5. Complete the live checks in [production operations](docs/production.md).
+
+`deploy` validates binding configuration, lints, type-checks, runs focused tests, builds through OpenNext, runs local production checks and uploads the Worker. It does not run remote migrations automatically. Missing Access settings block deployment.
+
+## Provider authentication
+
+Configure one Cloudflare Access self-hosted application for `/providers`, `/providers/*`, `/api/providers`, and `/api/providers/*` on every public hostname, including the Workers subdomain if enabled. Use an Allow policy and an identity provider; do not bypass protection. Set these non-secret values in `wrangler.jsonc`:
+
+```json
+"vars": {
+  "ACCESS_TEAM_DOMAIN": "https://your-team.cloudflareaccess.com",
+  "ACCESS_AUD": "your-64-character-application-audience"
+}
+```
+
+The server verifies the JWT signature, issuer, audience, expiry and identity. Applications remain scoped to the verified user. Local provider APIs fail closed without a valid identity. Existing ChatGPT Sites account IDs differ from Access IDs; migrating provider ownership requires an explicit verified mapping.
+
+## Corporate booking enquiries
+
+`/corporate-booking` submits a validated team brief through Turnstile and Resend to `swthastu@gmail.com`. The browser cannot override the recipient. Reply-To is the organiser's email; retries reuse an idempotency key for the same brief.
+
+- Configure `CORPORATE_FROM_EMAIL` with a verified Resend sender domain and `TURNSTILE_SITE_KEY` with a widget valid for every serving hostname.
+- Store `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` using Wrangler secret prompts.
+- Send a controlled live enquiry after deployment and verify inbox receipt and Reply-To. Simulated mail tests do not prove delivery.
+
+Without configuration, the page offers direct email contact. Corporate briefs are not stored in D1. General enquiries and workplace enquiries remain in D1 and do not send email notifications.
+
+## Rishi text and voice
+
+Rishi supports written conversation, browser dictation, and Gemini live voice. Set `GEMINI_API_KEY` as a Worker secret to enable Gemini. Optional server-only settings are `GEMINI_MODEL` and `GEMINI_LIVE_MODEL`; verify model availability and quota in the key's project. `OPENAI_API_KEY` and `OPENAI_MODEL` provide the legacy text provider when Gemini is not configured.
+
+```sh
+pnpm exec wrangler secret put GEMINI_API_KEY --config wrangler.jsonc
+```
+
+Use the same secret prompt for other credentials. Never use `NEXT_PUBLIC_` for keys. `/api/rishi` reports configured capabilities, not key validity or quota. Without AI credentials, guided preview remains available.
+
+Adult confirmation and sharing consent precede model requests. The live endpoint issues short-lived, constrained tokens and keeps the permanent key on the server. Calls stop after nine minutes; microphone capture stops when the call ends, the page is hidden, navigation occurs, or a connection fails. Check these behaviors on real devices before release. Conversations are temporary on the page; infrastructure and model providers may retain operational data.
+
+## Project layout
+
+- `app/`: pages, APIs, catalogue, metadata and existing editorial styles.
+- `components/site/`, `hooks/`, `lib/`: shared UI, browser behavior and integrations.
+- `worker/index.ts`: request limits, identity-header stripping and response headers.
+- `db/`, `drizzle/`: D1 schema and versioned migrations.
+- `scripts/tests/`: local security and integration tests with simulated providers.
+
+The catalogue includes 64 rituals, 5 workshops, 13 retreats and 6 gatherings. The journal keeps temporary text in memory and saves only explicitly requested encrypted copies in the browser. Real availability, fees, provider approval and bookings require human confirmation.
+
+Framework references: [OpenNext setup](https://opennext.js.org/cloudflare/get-started), [Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/), [D1 migrations](https://developers.cloudflare.com/d1/reference/migrations/).
