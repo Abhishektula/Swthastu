@@ -1,0 +1,21 @@
+@layer components {
+  .chat { @apply bg-palette-44 p-[25px] border border-line; }
+  .messages { @apply min-h-75 max-h-130 overflow-auto; }
+  .bubble { @apply bg-surface border border-line p-5 max-w-[90%] mb-5; }
+  .bubble span { @apply text-[9px] tracking-[1.2px] text-palette-45; }
+  .bubble p { @apply text-[13px] whitespace-pre-wrap mt-[10px] mr-0 mb-0 ml-0; }
+  .bubble.user { @apply ml-auto bg-palette-46; }
+  .chat form { @apply flex gap-2; }
+  .chat input:not([type=checkbox]) { @apply flex-1 min-w-0; }
+  .chat .consent input[type=checkbox] { @apply flex-none size-[18px] min-w-[18px] p-0 accent-brand; }
+  .chat .chips button { @apply text-[10px] py-2 px-3; }
+  .chat .smallnote { @apply mt-4 mr-0 mb-0 ml-0; }
+  @media(max-width:540px) { .chat { @apply p-[17px]; } }
+  @media(max-width:540px) { .bubble { @apply max-w-full; } }
+  @media(max-width:540px) { .chat input { @apply text-[12px]; } }
+  .chat>.consent { @apply text-[11px]; }
+  .chat textarea { @apply min-h-[130px] mt-[9px]; }
+  .chat .actions { @apply my-5 mx-0; }
+  .chat .button { @apply text-[11px] py-[13px] px-[17px]; }
+  .chat .textbutton:disabled { @apply opacity-[.45]; }
+}

@@ -1,12 +1,12 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCloudflareEnv } from "../lib/cloudflare";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "./schema";
 
 export function getDb() {
-  const { env } = getCloudflareContext();
+  const env = getCloudflareEnv();
   if (!env.DB) {
     throw new Error(
-      "Cloudflare D1 binding `DB` is unavailable. Set the `d1` field in .openai/hosting.json to `DB` or let your control plane inject the real binding values before using the database."
+      "Cloudflare D1 binding `DB` is unavailable. Configure it in wrangler.jsonc and apply the D1 migrations."
     );
   }
 

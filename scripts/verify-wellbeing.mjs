@@ -1,15 +1,15 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import ts from 'typescript';
-function transformSync(source){return {code:ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText}}
-const module=await import('data:text/javascript;base64,'+Buffer.from(transformSync(fs.readFileSync('app/journal-crypto.ts','utf8'),{loader:'ts',format:'esm'}).code).toString('base64'));
+import {stripTypeScriptTypes} from 'node:module';
+function transformSync(source){return {code:stripTypeScriptTypes(source)}}
+const journalCrypto=await import('data:text/javascript;base64,'+Buffer.from(transformSync(fs.readFileSync('app/journal-crypto.ts','utf8'),{loader:'ts',format:'esm'}).code).toString('base64'));
 const message=JSON.stringify({text:'Private thought: I need a gentler day.',mood:'Unsettled'});
-const a=await module.seal(message,'My private passphrase 2026'),b=await module.seal(message,'My private passphrase 2026');
+const a=await journalCrypto.seal(message,'My private passphrase 2026'),b=await journalCrypto.seal(message,'My private passphrase 2026');
 assert.notEqual(a.ciphertext,b.ciphertext);assert(!JSON.stringify(a).includes('Private thought'));
-assert.equal(await module.unseal(a,'My private passphrase 2026'),message);
-await assert.rejects(()=>module.unseal(a,'Wrong private passphrase'));
-const bad={...a,ciphertext:a.ciphertext.slice(0,-4)+'AAAA'};await assert.rejects(()=>module.unseal(bad,'My private passphrase 2026'));
-await assert.rejects(()=>module.seal(message,'short'));
+assert.equal(await journalCrypto.unseal(a,'My private passphrase 2026'),message);
+await assert.rejects(()=>journalCrypto.unseal(a,'Wrong private passphrase'));
+const bad={...a,ciphertext:a.ciphertext.slice(0,-4)+'AAAA'};await assert.rejects(()=>journalCrypto.unseal(bad,'My private passphrase 2026'));
+await assert.rejects(()=>journalCrypto.seal(message,'short'));
 const data=await import('data:text/javascript;base64,'+Buffer.from(transformSync(fs.readFileSync('app/data.ts','utf8'),{loader:'ts',format:'esm'}).code).toString('base64'));
 const workshops=await import('data:text/javascript;base64,'+Buffer.from(transformSync(fs.readFileSync('app/workshops.ts','utf8'),{loader:'ts',format:'esm'}).code).toString('base64'));
 const photos=[0,2,13,...data.programmes.map(p=>p[4]),4,'old-7','old-1','old-23','old-14','old-12',...data.festivals.map(f=>f[3]),'old-18','old-20','old-24',...workshops.workshops.map(w=>'workshop-'+w.slug)];

@@ -2,15 +2,16 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { catalogue } from './verify-catalogue.mjs';
+import { checkPage } from './verify-seo-page.mjs';
 const require = createRequire(import.meta.resolve('wrangler'));
 const { Miniflare } = require('miniflare');
-const mf = new Miniflare({ modules:[{type:'ESModule',path:'dist/server/index.js'}], compatibilityDate:'2026-05-15', compatibilityFlags:['nodejs_compat'], d1Databases:['DB'], assets:{directory:'dist/client',binding:'ASSETS',routerConfig:{has_user_worker:true,invoke_user_worker_ahead_of_assets:true}} });
+const mf = new Miniflare({ name:'swthastu-verification',modules:[{type:'ESModule',path:'.sites-runtime/production/index.js'}],serviceBindings:{WORKER_SELF_REFERENCE:'swthastu-verification'},ratelimits:{API_RATE_LIMITER:{simple:{limit:10,period:60}}}, compatibilityDate:'2026-05-15', compatibilityFlags:['nodejs_compat'], d1Databases:['DB'], assets:{directory:'.open-next/assets',binding:'ASSETS',routerConfig:{has_user_worker:true,invoke_user_worker_ahead_of_assets:true}} });
 try {
   const db=await mf.getD1Database('DB');
   for(const f of readdirSync('drizzle').filter(x=>x.endsWith('.sql')).sort()) {
     for(const sql of readFileSync('drizzle/'+f,'utf8').split('--> statement-breakpoint').filter(x=>x.trim())) await db.prepare(sql).run();
   }
-  for(const path of ['/','/at-work/eap','/sanctuary','/living-well','/providers','/workshops','/rituals','/retreats','/gatherings','/calendar']) {
+  for(const path of ['/','/at-work/eap','/sanctuary','/living-well','/corporate-booking','/rishi','/providers','/workshops','/rituals','/retreats','/gatherings','/calendar']) {
     const r=await mf.dispatchFetch('https://localhost'+path);assert.equal(r.status,200,path);assert((await r.text()).includes('Swthastu'));
   }
   const {rituals,experiences,experiencePath}=await catalogue();
@@ -21,7 +22,7 @@ try {
     const html=await response.text();
     const escaped=item.name.replaceAll('&','&amp;').replaceAll("'",'&#x27;');
     assert(html.includes('<h1>'+escaped+'</h1>'),`${path}: rendered heading`);
-    assert(html.includes('rel="canonical" href="https://swthastu-wellbeing.amberllama2.chatgpt.site'+path+'"'),`${path}: canonical URL`);
+    assert(html.includes('rel="canonical" href="https://swthastu.com'+path+'"'),`${path}: canonical URL`);
     assert(html.includes(item.image),`${path}: own illustration`);
   }
   const sitemap=await mf.dispatchFetch('https://localhost/sitemap.xml');
@@ -29,6 +30,14 @@ try {
   for(const path of ['/rituals/does-not-exist','/workshops/does-not-exist','/does-not-exist'])assert.equal((await mf.dispatchFetch('https://localhost'+path)).status,404,path);
   const reflection=await mf.dispatchFetch('https://localhost/sanctuary?practice=daily-energy-map');
   assert((await reflection.text()).includes('Which part of my day most needs a different rhythm?'),'Ritual prompt survives navigation without private text in the URL');
+  const titles=new Set(),descriptions=new Set();
+  const pages=JSON.parse(readFileSync('app/seo-pages.json','utf8'));
+  for(const path of [...Object.keys(pages),...details.map(item=>item.path)]){
+    const response=await mf.dispatchFetch('https://localhost'+path);
+    assert.equal(response.status,200,path);
+    checkPage(await response.text(),path,pages[path]?.index!==false,titles,descriptions,xml);
+    assert.equal(response.headers.get('x-frame-options'),'DENY');
+  }
   const localOrigin='https://localhost:'+new URL(await mf.ready).port;
   const post=async(path,data)=>mf.dispatchFetch('https://localhost'+path,{method:'POST',headers:{'content-type':'application/json',host:'localhost','x-forwarded-host':'localhost',origin:localOrigin},body:JSON.stringify(data)});
   const payload={name:'Migration Test',email:'test@example.com',company:'Local Test Only',role:'HR / People team',headcount:'1–49',locations:'Delhi',mode:'Office-based',needs:['Manager capability'],consent:true,adult:true};

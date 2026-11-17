@@ -1,4 +1,10 @@
 # Copied Sites are standalone projects and cannot inherit the monorepo policy.
+# Allow large Windows packages to finish on slower connections.
+networkConcurrency: 4
+fetchTimeout: 300000
+fetchRetries: 5
+fetchRetryMintimeout: 10000
+fetchRetryMaxtimeout: 60000
 minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 trustLockfile: false

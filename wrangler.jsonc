@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "swthastu",
+  "account_id": "939eb38b9ec0f4e03a9a97cdb167417d",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "observability": { "enabled": true, "traces": { "enabled": true } },
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "swthastu.com", "custom_domain": true },
+    { "pattern": "www.swthastu.com", "custom_domain": true }
+  ],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS", "not_found_handling": "none" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "swthastu" }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "swthastu-production",
+      "database_id": "8947c891-0594-4311-89ec-2f37e8859c0b",
+      "migrations_dir": "./drizzle"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "API_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ],
+  "vars": { "ACCESS_TEAM_DOMAIN": "", "ACCESS_AUD": "", "CORPORATE_FROM_EMAIL": "", "TURNSTILE_SITE_KEY": "" }
+}
