@@ -5,8 +5,9 @@ import {checkPage} from './verify-seo-page.mjs';
 
 const base=process.argv[2]||'http://localhost:3100';
 const pages=JSON.parse(readFileSync('app/seo-pages.json','utf8'));
+const posts=JSON.parse(readFileSync('app/blog-posts.json','utf8'));
 const {rituals,experiences,experiencePath}=await catalogue();
-const paths=[...Object.keys(pages),...rituals.map(r=>'/rituals/'+r.slug),...experiences.map(experiencePath)];
+const paths=[...Object.keys(pages),...rituals.map(r=>'/rituals/'+r.slug),...experiences.map(experiencePath),...posts.map(p=>'/blog/'+p.slug)];
 const indexed=paths.filter(path=>pages[path]?.index!==false);
 const sitemap=await fetch(base+'/sitemap.xml');
 assert.equal(sitemap.status,200);
