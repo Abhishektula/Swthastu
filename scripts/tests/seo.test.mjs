@@ -7,7 +7,7 @@ const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 const read=p=>stripTypeScriptTypes(readFileSync(new URL('../../app/'+p,import.meta.url),'utf8'));
 let source=read('seo.ts');
 for(const name of ['rituals-data','experiences-data'])source=source.replace(`'./${name}'`,JSON.stringify(url(read(name+'.ts'))));
-for(const name of ['seo-pages','seo-keywords']){
+for(const name of ['seo-pages','blog-posts','seo-keywords']){
   const data=readFileSync(new URL('../../app/'+name+'.json',import.meta.url),'utf8');
   source=source.replace(`'./${name}.json'`,JSON.stringify(url('export default '+data)));
 }
