@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "leave-work-on-paper",
+    "category": "Work & rest",
+    "title": "Close your workday with a three-line note",
+    "description": "Give tomorrow’s first task a place on paper so you can close the laptop with a clear stopping point.",
+    "image": "/images/work-home.webp",
+    "intro": "It’s dinner time, but part of you is still in the spreadsheet. A loose end is easier to leave at work when you know exactly how to pick it up again. Try this with the one task you keep rehearsing.",
+    "sections": [
+      {
+        "heading": "Name the loose end",
+        "text": "Write one sentence that describes where things stand. “The budget is unfinished” could mean anything. “The travel figures are in, and I’m waiting for the venue quote” tells tomorrow’s you what has already happened. Keep this note where you normally work."
+      },
+      {
+        "heading": "Leave a first move",
+        "text": "On the second line, write a next action you could start in two minutes. “Finish the budget” is a whole project. Try “Open the venue email and copy the catering figure into row eight.” If the reply hasn’t arrived, your first move might be sending a follow-up."
+      },
+      {
+        "heading": "Choose when to return",
+        "text": "Use the third line to give the task a time or cue, such as “after tomorrow’s team call.” Close the file. If the task pops back into your head on the bus, you already have an answer for when you’ll revisit it. For shift work, leave the note beside the next handover instead."
+      },
+      {
+        "heading": "Read it before opening your inbox",
+        "text": "At your next start, try the action you wrote down. If you still have to reconstruct yesterday’s reasoning, add the missing detail next time. The note has done its job when you can begin from it."
+      }
+    ]
+  },
+  {
+    "slug": "check-in-with-a-friend",
+    "category": "Connection",
+    "title": "What to say when a friend goes quiet",
+    "description": "Use a low-pressure invitation, a specific offer and a simple follow-up to make reaching out easier for both of you.",
+    "image": "/images/story-2.webp",
+    "intro": "You notice a friend has missed your usual Sunday call twice. You care, but “Is everything okay?” feels like a big question to receive on a tired afternoon. A smaller opening can leave room for a real answer.",
+    "sections": [
+      {
+        "heading": "Start with something you share",
+        "text": "Try “I passed our old tea stall today and thought of you. Would you like a ten-minute call this week?” It gives your friend a familiar place to start. Add an easy way to decline, such as “A voice note works too, whenever you feel like it.”"
+      },
+      {
+        "heading": "Ask what would feel welcome",
+        "text": "If they do open up, pause before offering solutions. You might ask, “Would you like me to listen, help you think it through, or talk about something else for a bit?” Then follow their choice. If they want company, an ordinary conversation about the cricket score counts."
+      },
+      {
+        "heading": "Make one offer you can keep",
+        "text": "“Let me know if you need anything” leaves the planning to them. Offer something concrete you can actually do. “I’m buying groceries on Thursday. Could I drop off a few things?” Wait for a yes before making arrangements or turning up."
+      },
+      {
+        "heading": "Agree on the next hello",
+        "text": "As you finish, ask whether a message next weekend would suit them. If your first invitation goes unanswered, a short “Thinking of you today” can stand on its own. If they ask for space, respect that request."
+      }
+    ]
+  },
+  {
+    "slug": "choose-your-first-retreat",
+    "category": "Retreat planning",
+    "title": "Five questions before booking your first retreat",
+    "description": "Check the daily rhythm, access arrangements, full cost, cancellation terms and support before paying a retreat deposit.",
+    "image": "/images/story-0.webp",
+    "intro": "A photograph tells you how a retreat looks. It tells you little about getting from your room to breakfast, or what happens if you need a quiet afternoon. Keep these five questions beside you when comparing programmes.",
+    "sections": [
+      {
+        "heading": "What does an ordinary day look like?",
+        "text": "Request a sample timetable with meals, travel time and breaks included. Ask which sessions are optional. If the part you most want is uninterrupted rest, two programmes marketed as a weekend away can offer very different amounts of it."
+      },
+      {
+        "heading": "Can the venue meet my everyday needs?",
+        "text": "Describe the specific arrangement you need. For example, “Is there a step-free route from my room to the dining room?” or “Can I have a chair during floor-based sessions?” Ask the organiser to confirm what the venue can provide before you book."
+      },
+      {
+        "heading": "What will I pay in total?",
+        "text": "Ask for a written total for your dates and room choice. Check transfers, taxes, meals, equipment and single-room supplements. Put travel costs next to the quoted price so you can compare two options on the same basis."
+      },
+      {
+        "heading": "What if my plans change?",
+        "text": "Ask when the deposit becomes non-refundable, whether you can transfer your place and what happens if the organiser cancels. Save the dated terms with the booking confirmation."
+      },
+      {
+        "heading": "Who can help on the day?",
+        "text": "Get the name or role of the on-site contact and ask how you reach them if you arrive late, feel unwell or want to leave a session. A clear reply to an ordinary question is useful information when deciding whether the retreat suits you."
+      }
+    ]
+  },
+  {
+    "slug": "journal-when-you-are-stuck",
+    "category": "Reflection",
+    "title": "A journal entry for days when words feel hard",
+    "description": "Start with one ordinary moment, notice what it took out of you and turn that observation into a small experiment for tomorrow.",
+    "image": "/images/workshop-thoughts.webp",
+    "intro": "Some evenings the question “How was your day?” is too large for a blank page. Pick a moment you could have photographed: standing in the lift, setting down your keys or waiting for the kettle. Three short lines are enough.",
+    "sections": [
+      {
+        "heading": "Write what happened",
+        "text": "Start with the visible details. “I ate lunch at my desk while three messages came in.” Leave explanations for later. If writing feels slow, use a few words on paper or say the sentence quietly to yourself."
+      },
+      {
+        "heading": "Notice one detail that mattered",
+        "text": "Add something you remember from inside that moment. “I barely tasted the food, and by two I wanted five minutes of quiet.” If you can’t name a feeling, describe what you noticed around you or what you wanted to do next."
+      },
+      {
+        "heading": "Try a change small enough for tomorrow",
+        "text": "Turn one detail into an experiment. “Tomorrow I’ll eat the first few bites away from the screen.” If leaving the desk is difficult, turn your chair towards the window for the first bite. A small experiment is easier to fit into the day you actually have."
+      },
+      {
+        "heading": "Come back once",
+        "text": "After lunch tomorrow, add a single observation. Did the change feel welcome, awkward or too hard to remember? Keep it, adjust it or drop it. Choose a private place for the note if you want to keep it. A scrap of paper you recycle afterwards works too."
+      }
+    ]
+  }
+]

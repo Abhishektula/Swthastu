@@ -1,0 +1,21 @@
+.blog-index, .blog-reading {
+  width: min(88%, 74rem);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 6rem) 0;
+  font-size: 1rem;
+}
+.blog-reading { max-width: 43rem; }
+.blog-index h1, .blog-reading h1 { font-size: clamp(2.7rem, 5vw, 5rem); }
+.blog-lead { max-width: 58ch; font-size: 1.2rem; }
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+.blog-grid img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; }
+.blog-grid a { display: block; }
+.blog-topic { margin: 1.25rem 0 .6rem; color: var(--green); font-size: .875rem; font-weight: 600; }
+.blog-grid h2, .blog-reading h2 { font-size: clamp(1.65rem, 3vw, 2.3rem); letter-spacing: -.035em; margin-bottom: .65rem; }
+.blog-reading section { margin: 2rem 0; }
+.blog-reading > a, .blog-grid a:hover h2 { text-decoration: underline; text-underline-offset: .2em; }

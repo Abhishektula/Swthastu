@@ -1,4 +1,5 @@
 import pages from './seo-pages.json';
+import posts from './blog-posts.json';
 import keywords from './seo-keywords.json';
 import { rituals } from './rituals-data';
 import { experiences, experiencePath } from './experiences-data';
@@ -12,9 +13,12 @@ export const indexablePaths = [
   ...pagePaths.filter(path => summaries[path].index !== false),
   ...rituals.map(item => '/rituals/' + item.slug),
   ...experiences.map(experiencePath),
+  ...posts.map(post => '/blog/' + post.slug),
 ];
 
 export function seoEntry(path: string): Entry | undefined {
+  const post = posts.find(item => path === '/blog/' + item.slug);
+  if (post) return { title: post.title + ' | Swthastu', description: post.description, image: post.image };
   const ritual = rituals.find(item => path === '/rituals/' + item.slug);
   const experience = experiences.find(item => path === experiencePath(item));
   const item = ritual || experience;
